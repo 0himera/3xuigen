@@ -1,8 +1,7 @@
 [tool.poetry]
 name = "3xuigen"
-version = "0.1.0"
+version = "1.0"
 description = "API для управления 3xui через туннель"
-authors = ["Your Name <your.email@example.com>"]
 package-mode = false
 
 [tool.poetry.dependencies]
@@ -13,7 +12,7 @@ python-dotenv = "^1.0.1"
 pydantic = "^2.6.1"
 pydantic-settings = "^2.1.0"
 httpx = "^0.27.0"
-paramiko = "^3.4.0"  # Для SSH подключения
+paramiko = "^3.4.0" 
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.3.1"
