@@ -139,16 +139,28 @@ class CreateInboundRequest(BaseModel):
 
 class CreateClientRequest(BaseModel):
     inbound_id: int = Field(..., description="ID инбаунда")
-    email: Optional[str] = Field(None, description="Email клиента")
+    email: Optional[str] = Field(None, description="Email (метка) клиента. Если не указан, будет сгенерирован.")
     id: Optional[str] = Field(None, description="UUID клиента (если не указан, будет сгенерирован)")
-    flow: Optional[str] = Field("xtls-rprx-vision", description="Flow для VLESS")
-    
+    flow: Optional[str] = Field("xtls-rprx-vision", description="Flow для VLESS (игнорируется для других протоколов)")
+    limit_ip: Optional[int] = Field(0, description="Лимит одновременных IP (0 = безлимит)")
+    total_gb: Optional[int] = Field(0, description="Лимит трафика в ГБ (0 = безлимит)")
+    expiry_time: Optional[int] = Field(0, description="Unix timestamp окончания срока действия в миллисекундах (0 = бессрочно)")
+    enable: Optional[bool] = Field(True, description="Статус клиента (включен/выключен)")
+    tg_id: Optional[str] = Field("", description="Telegram ID")
+    sub_id: Optional[str] = Field(None, description="ID для генерации подписки (если не указан, будет сгенерирован)")
+
     class Config:
         json_schema_extra = {
             "example": {
                 "inbound_id": 1,
                 "email": "user@example.com",
-                "flow": "xtls-rprx-vision"
+                "flow": "xtls-rprx-vision",
+                "limit_ip": 0,
+                "total_gb": 0,
+                "expiry_time": 0, # Example: 2025-01-01 UTC
+                "enable": True,
+                "tg_id": "",
+                "sub_id": None
             }
         }
 

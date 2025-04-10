@@ -108,7 +108,7 @@ Once the server is running, interactive API documentation is available at:
 -   `GET /inbounds` - List all inbounds.
 -   `POST /inbounds` - Create a new inbound.
 -   `DELETE /inbounds/{inbound_id}` - Delete an inbound by ID.
--   `POST /clients` - Add a client to an existing inbound.
+-   `POST /clients` - Add a client to an existing inbound. Allows setting email, UUID, flow, traffic limit (GB), IP limit, expiration time (ms timestamp), Telegram ID, subscription ID, and enable status.
 -   `POST /inbounds/{inbound_id}/clients/{client_uuid}` - Remove a client from an inbound by UUID.
 -   `GET /generate-keypair` - Generate a new X25519 keypair (requires `xray` locally or uses fallback).
 -   `GET /login-form` - Display an HTML form for manual login testing.

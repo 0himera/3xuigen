@@ -382,22 +382,24 @@ async def add_client_to_inbound(
     
     # Prepare client data
     client_id = request.id or str(uuid.uuid4())
+    client_email = request.email or f"user_{client_id[:8]}" # Generate email if not provided
+    sub_id = request.sub_id or str(uuid.uuid4()).replace("-", "")[:16] # Generate subId if not provided
+    
     client_settings = {
         "id": client_id,
-        "email": request.email or f"user_{client_id}",
-        # Add other client settings from CreateClientRequest if needed (limitIp, totalGB, expiryTime, etc.)
-        # These should match the structure expected by 3xui when adding a client.
-        # Example (add these to CreateClientRequest model first):
-        # "limitIp": request.limit_ip or 0,
-        # "totalGB": request.total_gb * 1024**3 if request.total_gb else 0, # Convert GB to bytes
-        # "expiryTime": request.expiry_time or 0,
-        # "enable": request.enable if request.enable is not None else True,
-        # "tgId": request.tg_id or "",
-        # "subId": request.sub_id or ""
+        "email": client_email,
+        "limitIp": request.limit_ip or 0,
+        "totalGB": (request.total_gb or 0) * 1024**3, # Convert GB to bytes
+        "expiryTime": request.expiry_time or 0, # Expecting ms timestamp
+        "enable": request.enable if request.enable is not None else True,
+        "tgId": request.tg_id or "",
+        "subId": sub_id,
+        "reset": 0 # Default value for reset
     }
     
-    if protocol == "vless" and request.flow:
-        client_settings["flow"] = request.flow
+    # Add flow only if protocol is vless
+    if protocol == "vless":
+        client_settings["flow"] = request.flow or "" # Use provided flow or default empty string for vless
     
     # Call the updated add_client method, passing only client_settings
     result = await client.add_client(request.inbound_id, client_settings)
@@ -408,6 +410,7 @@ async def add_client_to_inbound(
             detail=f"Failed to add client to inbound {request.inbound_id}. Check server logs."
         )
     
+    # Return the actual settings sent to the panel
     return {
         "success": True,
         "message": "Client added successfully",
